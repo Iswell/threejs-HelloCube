@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hello Cube</title>
+</head>
+<body>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r124/three.min.js"></script>
+<script>
+
+  // Scene
+  var scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x000000);
+  scene.fog = new THREE.Fog(0x765456c, 0.1, 8);
+  var loader = new THREE.TextureLoader();
+  loader.load("./background.jpg", function(texture){
+    scene.background = texture;
+  })
+  // Camera
+  var camera = new THREE.PerspectiveCamera(
+  75,
+  window.innerWidth/window.innerHeight
+  );
+
+  // Renderer
+  var renderer = new THREE.WebGLRenderer();
+  renderer.setSize(window.innerWidth,window.innerHeight);
+  document.body.appendChild(renderer.domElement);
+
+  // Geometry cube
+  var geometry = new THREE.BoxGeometry(2, 2, 2, 2, 2 , 2);
+  var material = new THREE.MeshBasicMaterial({
+    color: 0x00ff00,
+    wireframe: true
+  });
+  var object = new THREE.Mesh(geometry, material);
+  scene.add(object);
+  // Geometry sphere
+  var object = new THREE.Mesh(new THREE.SphereGeometry( 2, 10, 10 ), material);
+  object.position.x = 4;
+  scene.add(object);
+  
+  // Camera position
+  camera.position.z = 15;
+
+  window.addEventListener('resize', redimensionar);
+
+  function redimensionar(){
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth,window.innerHeight);
+    renderer.render(scene, camera);
+  }
+
+  //animation
+  var animate = function(){
+            requestAnimationFrame(animate);
+
+            scene.traverse(function (object){
+              if(object.isMesh === true){
+              object.rotation.x += 0.01;
+              object.rotation.y += 0.01;
+              }
+              
+            });
+
+
+            //cube.rotation.x += 0.01;
+            //cube.rotation.y += 0.01;
+
+            renderer.render(scene, camera);
+
+        }
+
+        animate();
+ 
+</script>
+</body>
+</html>
